@@ -46,7 +46,7 @@ class beam(object):
 
 
 # class antenna(object):
-"""
+
 class receiver(object):
         
     def oneshot_dfs01(self):
@@ -54,7 +54,7 @@ class receiver(object):
     
     def oneshot_dfs02(self):
         pass
-"""
+
 class condition(object):
     
     def get_status(self):
@@ -69,13 +69,13 @@ class controller(object):
         
         # import telescope_nanten.antenna_nanten
         import telescope_nanten.beam_nanten
-        #import telescope_nanten.receiver_nanten
+        import telescope_nanten.receiver_nanten
         #import telescope_nanten.condition_nanten
         # import telescope_nanten.doppler_nanten
         
         # self.ant = telescope_nanten.antenna_nanten.antenna_nanten()
         self.beam = telescope_nanten.beam_nanten.beam_nanten()
-        #self.rx = telescope_nanten.receiver_nanten.receiver_nanten()
+        self.rx = telescope_nanten.receiver_nanten.receiver_nanten()
         #self.condition = telescope_nanten.condition_nanten.condition_nanten()
         # self.doppler = telescope_nanten.doppler_nanten.doppler_nanten()
         return
@@ -102,13 +102,14 @@ class controller(object):
         if position == "in": self.beam.m4_in()
         elif position == "out": self.beam.m4_out()
         return
-    """
+    
     def oneshot(self, repeat=1, exposure=1.0, stime=0.0):
         #分光計oneshotのcount値を配列で出力
         dfs01 = self.rx.oneshot_dfs01(repeat, exposure ,stime)
         dfs02 = self.rx.oneshot_dfs02(repeat, exposure ,stime)
-        return {"dfs1":dfs01, "dfs2":dfs02}
-    """
+        return {"dfs1":dfs01,
+                "dfs2":dfs02}
+    
     def get_status(self):
         #現在の機器and天気のステータスを取得
         timestamp = time.time()
@@ -120,7 +121,7 @@ class controller(object):
                    "m4" : beam_status[1],
                    "hot" : beam_status[0],
                    }
-        return 
+        return status
 
 class read_status(object):
     
@@ -132,8 +133,8 @@ class read_status(object):
     def read_status(self):
         """機器and天気のステータスを取得_"""
         timestamp = time.strftime('%Y/%m/%d %H:%M:%S',time.gmtime())
-        # ant_status = self.ant.get_status()
-        beam_status = self.status.get_beam()
+        ant_status = self.status.get_antenna()
+        #beam_status = self.status.get_beam()
         # sg_status = self.doppler.get_status()
         #ret = self.status.get_weather()
         # condition['az'] = ant_status[0]
@@ -166,7 +167,9 @@ class read_status(object):
                    }
         """
         status = { "time" : timestamp,
-                   "m4" : beam_status[1],
-                   "hot" : beam_status[0],
+                   "current_az" : ant_status[0],
+                   "current_el" : ant_status[1],
+                   "command_az" : ant_status[2],
+                   "command_el" : ant_status[3],
                    }
         return status
