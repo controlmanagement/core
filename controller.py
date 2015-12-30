@@ -67,14 +67,14 @@ class controller(object):
     
     def __init__(self):
         
-        # import telescope_nanten.antenna_nanten
-        import telescope_nanten.beam_nanten
+        import telescope_nanten.antenna_nanten
+        #import telescope_nanten.beam_nanten
         import telescope_nanten.receiver_nanten
         #import telescope_nanten.condition_nanten
         # import telescope_nanten.doppler_nanten
         
-        # self.ant = telescope_nanten.antenna_nanten.antenna_nanten()
-        self.beam = telescope_nanten.beam_nanten.beam_nanten()
+        self.ant = telescope_nanten.antenna_nanten.antenna_nanten()
+        #self.beam = telescope_nanten.beam_nanten.beam_nanten()
         self.rx = telescope_nanten.receiver_nanten.receiver_nanten()
         #self.condition = telescope_nanten.condition_nanten.condition_nanten()
         # self.doppler = telescope_nanten.doppler_nanten.doppler_nanten()
@@ -114,12 +114,12 @@ class controller(object):
         #現在の機器and天気のステータスを取得
         timestamp = time.time()
         # ant_status = self.ant.get_status()
-        beam_status = self.beam.get_status()
+        #beam_status = self.beam.get_status()
         # sg_status = self.doppler.get_status()
         # gps_status = 
         status = { "timestamp" : timestamp,
-                   "m4" : beam_status[1],
-                   "hot" : beam_status[0],
+                   #"m4" : beam_status[1],
+                   #"hot" : beam_status[0],
                    }
         return status
 
@@ -172,4 +172,5 @@ class read_status(object):
                    "command_az" : ant_status[2],
                    "command_el" : ant_status[3],
                    }
+                   
         return status
