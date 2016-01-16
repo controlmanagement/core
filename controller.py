@@ -45,7 +45,34 @@ class beam(object):
         pass
 
 
-# class antenna(object):
+class antenna(object):
+
+    def drive_on(self):
+        pass
+     
+    def drive_off(self):
+        pass
+    
+    def azel_move(self):
+        pass
+
+    def radec_move(self):
+        pass
+    
+    def planet_move(self):
+        pass
+    
+    def tracking_end(self):
+        pass
+    
+    def clear_error(self):
+        pass
+    
+    def start_limit_check(self):
+        pass
+    
+    def stop_limit_check(self):
+        pass
 
 class receiver(object):
         
@@ -129,14 +156,14 @@ class read_status(object):
         
         import telescope_nanten.equipment_nanten
         self.status = telescope_nanten.equipment_nanten.read_status()
-        
+
     def read_status(self):
         """機器and天気のステータスを取得_"""
         timestamp = time.strftime('%Y/%m/%d %H:%M:%S',time.gmtime())
         ant_status = self.status.get_antenna()
         #beam_status = self.status.get_beam()
         # sg_status = self.doppler.get_status()
-        #ret = self.status.get_weather()
+        ret = self.status.get_weather()
         # condition['az'] = ant_status[0]
         # condition['el'] = ant_status[1]
         # condition['sg'] = sg_status
@@ -171,6 +198,26 @@ class read_status(object):
                    "current_el" : ant_status[1],
                    "command_az" : ant_status[2],
                    "command_el" : ant_status[3],
+                   "Year" : ret[0],
+                   "Month" : ret[1],
+                   "Day" : ret[2],
+                   "Hour" : ret[3],
+                   "Min" : ret[4],
+                   "Sec" : ret[5],
+                   "InTemp" : ret[6],
+                   "OutTemp" : ret[7],
+                   "InHumi" : ret[8],
+                   "OutHumi" : ret[9],
+                   "WindDir" : ret[10],
+                   "WindSp" : ret[11],
+                   "Press" : ret[12],
+                   "Rain" : ret[13],
+                   "CabinTemp1" : ret[14],
+                   "CabinTemp2" :ret[15],
+                   "DomeTemp1" : ret[16],
+                   "DomeTemp2" : ret[17],
+                   "GenTemp1" : ret[18],
+                   "GenTemp2" : ret[19],
                    }
                    
         return status
