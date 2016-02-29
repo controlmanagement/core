@@ -290,6 +290,16 @@ class read_status(object):
         # sg_status = self.doppler.get_status()
         ret = self.status.read_weather()
         
+        if ant_status[0][18] == 1:
+            derror_az = 'ON'
+        else:
+            derror_az = 'OFF'
+
+        if ant_status[0][19] == 1:
+            derror_el = 'ON'
+        else:
+            derror_el = 'OFF'
+
         if ant_status[1][0] & ant_status[1][1] == 1:
             drive_ready_az = 'ON'
         else:
@@ -326,6 +336,8 @@ class read_status(object):
                    "Drive_ready_El": drive_ready_el,
                    "Authority" : ant_status[2],
                    "Emergency" : emergency,
+                   "Deviation_error_Az" : derror_az,
+                   "Deviation_error_El" : derror_el,
                    "Current_Dome" : ant_status[6],
                    "Door_Dome" : door_dome,
                    "Door_Membrane" : ant_status[5][2][1],
