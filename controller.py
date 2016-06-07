@@ -155,6 +155,11 @@ class controller(object):
         self.ant.drive_off()
         return
 
+	def test_move(self,az_speed,el_speed,dist_arcsec = 15 * 3600):
+		"""望遠鏡を(Az_speed, El_speed)でdist_arcsecの距離を動かす"""
+		self.antenna.test_move(az_speed,el_speed,dist_arcsec)
+		return
+
     def azel_move(self, az_arcsec, el_arcsec, az_rate = 12000, el_rate = 12000):
         """望遠鏡を(Az, El)に動かす"""
         self.ant.azel_move(az_arcsec, el_arcsec, az_rate, el_rate)    
