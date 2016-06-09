@@ -126,10 +126,14 @@ class controller(object):
         #import telescope_nanten.doppler_nanten
         
         self.ant = telescope_nanten.antenna_nanten.antenna_nanten()
-        self.beam = telescope_nanten.beam_nanten.beam_nanten()
-        self.rx = telescope_nanten.receiver_nanten.receiver_nanten()
+        #self.beam = telescope_nanten.beam_nanten.beam_nanten()
+        #self.rx = telescope_nanten.receiver_nanten.receiver_nanten()
         #self.condition = telescope_nanten.condition_nanten.condition_nanten()
         # self.doppler = telescope_nanten.doppler_nanten.doppler_nanten()
+
+        import telescope_nanten.equipment_nanten
+        self.status = telescope_nanten.equipment_nanten.read_status()
+
         return
     
     def initialize_observation(self):
@@ -155,9 +159,9 @@ class controller(object):
         self.ant.drive_off()
         return
 
-	def test_move(self,az_speed,el_speed,dist_arcsec = 15 * 3600):
+    def test_move(self,az_speed,el_speed,dist_arcsec = 15 * 3600):
 		"""望遠鏡を(Az_speed, El_speed)でdist_arcsecの距離を動かす"""
-		self.antenna.test_move(az_speed,el_speed,dist_arcsec)
+		self.ant.test_move(az_speed,el_speed,dist_arcsec)
 		return
 
     def azel_move(self, az_arcsec, el_arcsec, az_rate = 12000, el_rate = 12000):
@@ -261,31 +265,14 @@ class controller(object):
 
     def write_text(self, array, txtname):
         #データをtxtに書き込み
-        f=open(txtname, 'a+')
+        file_path = '/home/amigos/NECST/data/ps/'
+        f=open(file_path+txtname, 'a+')
         for x in array:
+
             f.write(str(x)+' ')
         f.write('\n')
         f.close()
         return 
-
-    def get_status(self):
-        #現在の機器and天気のステータスを取得
-        timestamp = time.time()
-        # ant_status = self.ant.get_status()
-        #beam_status = self.beam.get_status()
-        # sg_status = self.doppler.get_status()
-        # gps_status = 
-        status = { "timestamp" : timestamp,
-                   #"m4" : beam_status[1],
-                   #"hot" : beam_status[0],
-                   }
-        return status
-
-class read_status(object):
-    
-    def __init__(self):
-        import telescope_nanten.equipment_nanten
-        self.status = telescope_nanten.equipment_nanten.read_status()
 
     def read_status(self):
         """機器and天気のステータスを取得_"""
@@ -295,16 +282,6 @@ class read_status(object):
         # sg_status = self.doppler.get_status()
         ret = self.status.read_weather()
         
-        if ant_status[0][18] == 1:
-            derror_az = 'ON'
-        else:
-            derror_az = 'OFF'
-
-        if ant_status[0][19] == 1:
-            derror_el = 'ON'
-        else:
-            derror_el = 'OFF'
-
         if ant_status[1][0] & ant_status[1][1] == 1:
             drive_ready_az = 'ON'
         else:
@@ -329,7 +306,7 @@ class read_status(object):
         else:
             door_dome = 'ERROR'
 
-        status = { "Time" : timestamp,
+        statusbox = { "Time" : timestamp,
                    "Limit" : ant_status[0],
                    "Current_Az" : ant_status[4][0]/3600.,
                    "Current_El" : ant_status[4][1]/3600.,
@@ -341,9 +318,7 @@ class read_status(object):
                    "Drive_ready_El": drive_ready_el,
                    "Authority" : ant_status[2],
                    "Emergency" : emergency,
-                   "Deviation_error_Az" : derror_az,
-                   "Deviation_error_El" : derror_el,
-                   "Current_Dome" : ant_status[6],
+                   "Current_Dome" : ant_status[6]/3600.,
                    "Door_Dome" : door_dome,
                    "Door_Membrane" : ant_status[5][2][1],
                    "Door_Authority" : ant_status[5][3],
@@ -369,6 +344,89 @@ class read_status(object):
                    "DomeTemp2" : ret[17],
                    "GenTemp1" : ret[18],
                    "GenTemp2" : ret[19],
+                   "None" : 'None',
                    }
                    
-        return status
+        return statusbox
+
+
+class read_status(object):
+    
+    def __init__(self):
+        import telescope_nanten.equipment_nanten
+        self.status = telescope_nanten.equipment_nanten.read_status()
+
+    def read_status(self):
+        """機器and天気のステータスを取得_"""
+        timestamp = time.strftime('%Y/%m/%d %H:%M:%S',time.gmtime())
+        ant_status = self.status.read_antenna()
+        beam_status = self.status.read_beam()
+        # sg_status = self.doppler.get_status()
+        ret = self.status.read_weather()
+        
+        if ant_status[1][0] & ant_status[1][1] == 1:
+            drive_ready_az = 'ON'
+        else:
+            drive_ready_az = 'OFF'
+
+        if ant_status[1][2] & ant_status[1][3] == 1:
+            drive_ready_el = 'ON'
+        else:
+            drive_ready_el = 'OFF'
+
+        if ant_status[1][24] == 1:
+            emergency = 'ON'
+        else:
+            emergency = 'OFF'
+
+        if ant_status[5][1][1] == 'OPEN' and ant_status[5][1][3] == 'OPEN':
+            door_dome = 'OPEN'
+        elif ant_status[5][1][1] == 'MOVE' or ant_status[5][1][3] == 'MOVE':
+            door_dome = 'MOVE'
+        elif ant_status[5][1][1] == 'CLOSE' and ant_status[5][1][3] == 'CLOSE':
+            door_dome = 'CLOSE'
+        else:
+            door_dome = 'ERROR'
+
+        statusbox = { "Time" : timestamp,
+                   "Limit" : ant_status[0],
+                   "Current_Az" : ant_status[4][0]/3600.,
+                   "Current_El" : ant_status[4][1]/3600.,
+                   "Command_Az" : ant_status[3][2]/3600.,
+                   "Command_El" : ant_status[3][3]/3600.,
+                   "Deviation_Az" : ant_status[3][4],
+                   "Deviation_El" : ant_status[3][5],
+                   "Drive_ready_Az" : drive_ready_az,
+                   "Drive_ready_El": drive_ready_el,
+                   "Authority" : ant_status[2],
+                   "Emergency" : emergency,
+                   "Current_Dome" : ant_status[6]/3600.,
+                   "Door_Dome" : door_dome,
+                   "Door_Membrane" : ant_status[5][2][1],
+                   "Door_Authority" : ant_status[5][3],
+                   "Current_M4" : beam_status[1],
+                   "Current_Hot" : beam_status[0],
+                   "Year" : ret[0],
+                   "Month" : ret[1],
+                   "Day" : ret[2],
+                   "Hour" : ret[3],
+                   "Min" : ret[4],
+                   "Sec" : ret[5],
+                   "InTemp" : ret[6],
+                   "OutTemp" : ret[7],
+                   "InHumi" : ret[8],
+                   "OutHumi" : ret[9],
+                   "WindDir" : ret[10],
+                   "WindSp" : ret[11],
+                   "Press" : ret[12],
+                   "Rain" : ret[13],
+                   "CabinTemp1" : ret[14],
+                   "CabinTemp2" :ret[15],
+                   "DomeTemp1" : ret[16],
+                   "DomeTemp2" : ret[17],
+                   "GenTemp1" : ret[18],
+                   "GenTemp2" : ret[19],
+                   "None" : 'None',
+                   }
+                   
+        return statusbox
