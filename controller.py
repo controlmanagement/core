@@ -126,8 +126,8 @@ class controller(object):
         #import telescope_nanten.doppler_nanten
         
         self.ant = telescope_nanten.antenna_nanten.antenna_nanten()
-        #self.beam = telescope_nanten.beam_nanten.beam_nanten()
-        #self.rx = telescope_nanten.receiver_nanten.receiver_nanten()
+        self.beam = telescope_nanten.beam_nanten.beam_nanten()
+        self.rx = telescope_nanten.receiver_nanten.receiver_nanten()
         #self.condition = telescope_nanten.condition_nanten.condition_nanten()
         # self.doppler = telescope_nanten.doppler_nanten.doppler_nanten()
 
@@ -256,10 +256,11 @@ class controller(object):
 
     def oneshot(self, repeat=1, exposure=1.0, stime=0.0):
         #分光計oneshotのcount値を配列で出力
-        dfs01 = self.rx.oneshot_dfs01(repeat, exposure ,stime)
-        dfs02 = self.rx.oneshot_dfs02(repeat, exposure ,stime)
-        return {"dfs1":dfs01,
-                "dfs2":dfs02}
+        #dfs01 = self.rx.oneshot_dfs01(repeat, exposure ,stime)
+        #dfs02 = self.rx.oneshot_dfs02(repeat, exposure ,stime)
+        data = self.rx.oneshot_dfs(repeat, exposure, stime)
+        data_dict = {'dfs1': data[0], 'dfs2': data[1]}
+        return data_dict
 
     # for status
 
