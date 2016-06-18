@@ -151,38 +151,45 @@ class controller(object):
 
     def drive_on(self):
         """drive_on"""
+        self.tracking_end()
         self.ant.drive_on()
         return
 
     def drive_off(self):
         """drive_off"""
+        self.tracking_end()
         self.ant.drive_off()
         return
 
     def test_move(self,az_speed,el_speed,dist_arcsec = 5 * 3600):
         """望遠鏡を(Az_speed, El_speed)でdist_arcsecの距離を動かす"""
+        self.tracking_end()
         self.ant.test_move(az_speed,el_speed,dist_arcsec)
         return
 
     def azel_move(self, az_arcsec, el_arcsec, az_rate = 12000, el_rate = 12000):
         """望遠鏡を(Az, El)に動かす"""
+        self.tracking_end()
         self.ant.azel_move(az_arcsec, el_arcsec, az_rate, el_rate)    
         return
     
-    def radec_move(self, ra, dec, code_mode, off_x = 0, off_y = 0, hosei = 'hosei_230.txt', offcoord = 'HORIZONTAL'):
+    def radec_move(self, ra, dec, code_mode, off_x = 0, off_y = 0, hosei = 'hosei_230.txt', offcoord = 'HORIZONTAL', lamda=2600, az_rate=12000, el_rate=12000):
         """望遠鏡を(Ra, Dec)に動かす"""
-        self.ant.radec_move(ra, dec, code_mode, off_x, off_y, hosei, offcoord)
+        self.tracking_end()
+        self.ant.radec_move(ra, dec, code_mode, off_x, off_y, hosei, offcoord, lamda, az_rate, el_rate)
         return
 
-    def galactic_move(self, l, b, off_x = 0, off_y = 0, hosei = 'hosei_230.txt', offcoord = 'HORIZONTAL'):
+    def galactic_move(self, l, b, off_x = 0, off_y = 0, hosei = 'hosei_230.txt', offcoord = 'HORIZONTAL', lamda=2600, az_rate=12000, el_rate=12000):
         """望遠鏡を(l, b)に動かす"""
-        self.ant.galactic_move(l, b, off_x, off_y, hosei, offcoord)
+        self.tracking_end()
+        self.ant.galactic_move(l, b, off_x, off_y, hosei, offcoord, lamda, az_rate, el_rate)
         return
 
-    def planet_move(self, number, off_x = 0, off_y = 0, hosei = 'hosei_230.txt', offcoord = 'HORIZONTAL'):
+    def planet_move(self, number, off_x = 0, off_y = 0, hosei = 'hosei_230.txt', offcoord = 'HORIZONTAL', lamda=2600, az_rate=12000, el_rate=12000):
         """望遠鏡をplanetに動かす
         1.Mercury 2.Venus 3. 4.Mars 5.Jupiter 6.Saturn 7.Uranus 8.Neptune, 9.Pluto, 10.Moon, 11.Sun"""
-        self.ant.planet_move(number, off_x, off_y, hosei, offcoord)
+        self.tracking_end()
+        self.ant.planet_move(number, off_x, off_y, hosei, offcoord, lamda, az_rate, el_rate)
         return
 
     def tracking_end(self):
