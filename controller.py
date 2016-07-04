@@ -169,6 +169,12 @@ class controller(object):
 
     def azel_move(self, az_arcsec, el_arcsec, az_rate = 12000, el_rate = 12000):
         """望遠鏡を(Az, El)に動かす"""
+        if az_arcsec < -260.*3600. or az_arcsec > 260*3600:
+            print("!!Az range is -260~260[degree]!!")
+            return
+        if el_arcsec < 0. or el_arcsec > 90.*3600.:
+            print("!!El range is 0~90[degree]!!")
+            return
         self.tracking_end()
         self.ant.azel_move(az_arcsec, el_arcsec, az_rate, el_rate)    
         return
