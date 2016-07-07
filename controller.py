@@ -179,6 +179,11 @@ class controller(object):
         self.ant.azel_move(az_arcsec, el_arcsec, az_rate, el_rate)    
         return
     
+    def azel_stop(self):
+        """望遠鏡のazel駆動を止める"""
+        self.ant.azel_stop()
+        return
+    
     def radec_move(self, ra, dec, code_mode, off_x = 0, off_y = 0, hosei = 'hosei_230.txt', offcoord = 'HORIZONTAL', lamda=2600, az_rate=12000, el_rate=12000):
         """望遠鏡を(Ra, Dec)に動かす"""
         self.tracking_end()
