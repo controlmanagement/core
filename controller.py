@@ -12,6 +12,7 @@
 ------------------------------------------------
 """
 import time
+import tel_status.py
 
 class beam(object):
     
@@ -452,7 +453,10 @@ class read_status(object):
                    "GenTemp1" : ret[18],
                    "GenTemp2" : ret[19],
                    "None" : 'None',
-                   "Current_M2" : beam_status[2]
+                   "Current_M2" : beam_status[2],
+                   "MJD" : mjd,
+                   "LST" : [lst_hh,lst_mm,lst_ss],
+                   "Secofday" : secofday 
                    }
                    
         return statusbox
