@@ -369,6 +369,7 @@ class controller(object):
                    "GenTemp1" : ret[18],
                    "GenTemp2" : ret[19],
                    "None" : 'None',
+                   "Current_M2" : beam_status[2]
                    }
                    
         return statusbox
@@ -451,6 +452,7 @@ class read_status(object):
                    "GenTemp1" : ret[18],
                    "GenTemp2" : ret[19],
                    "None" : 'None',
+                   "Current_M2" : beam_status[2]
                    }
                    
         return statusbox
