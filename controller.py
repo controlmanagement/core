@@ -12,7 +12,7 @@
 ------------------------------------------------
 """
 import time
-import tel_status.py
+import tel_status
 
 class beam(object):
     
