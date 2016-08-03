@@ -12,7 +12,7 @@
 ------------------------------------------------
 """
 import time
-import tel_status
+from datetime import datetime as dt
 
 class beam(object):
     
@@ -307,88 +307,21 @@ class controller(object):
         # sg_status = self.doppler.get_status()
         ret = self.status.read_weather()
         
-        if ant_status[1][0] & ant_status[1][1] == 1:
-            drive_ready_az = 'ON'
-        else:
-            drive_ready_az = 'OFF'
-
-        if ant_status[1][2] & ant_status[1][3] == 1:
-            drive_ready_el = 'ON'
-        else:
-            drive_ready_el = 'OFF'
-
-        if ant_status[1][24] == 1:
-            emergency = 'ON'
-        else:
-            emergency = 'OFF'
-
-        if ant_status[5][1][1] == 'OPEN' and ant_status[5][1][3] == 'OPEN':
-            door_dome = 'OPEN'
-        elif ant_status[5][1][1] == 'MOVE' or ant_status[5][1][3] == 'MOVE':
-            door_dome = 'MOVE'
-        elif ant_status[5][1][1] == 'CLOSE' and ant_status[5][1][3] == 'CLOSE':
-            door_dome = 'CLOSE'
-        else:
-            door_dome = 'ERROR'
-
-        statusbox = { "Time" : timestamp,
-                   "Limit" : ant_status[0],
-                   "Current_Az" : ant_status[4][0]/3600.,
-                   "Current_El" : ant_status[4][1]/3600.,
-                   "Command_Az" : ant_status[3][2]/3600.,
-                   "Command_El" : ant_status[3][3]/3600.,
-                   "Deviation_Az" : ant_status[3][4],
-                   "Deviation_El" : ant_status[3][5],
-                   "Drive_ready_Az" : drive_ready_az,
-                   "Drive_ready_El": drive_ready_el,
-                   "Authority" : ant_status[2],
-                   "Emergency" : emergency,
-                   "Current_Dome" : ant_status[6]/3600.,
-                   "Door_Dome" : door_dome,
-                   "Door_Membrane" : ant_status[5][2][1],
-                   "Door_Authority" : ant_status[5][3],
-                   "Current_M4" : beam_status[1],
-                   "Current_Hot" : beam_status[0],
-                   "Year" : ret[0],
-                   "Month" : ret[1],
-                   "Day" : ret[2],
-                   "Hour" : ret[3],
-                   "Min" : ret[4],
-                   "Sec" : ret[5],
-                   "InTemp" : ret[6],
-                   "OutTemp" : ret[7],
-                   "InHumi" : ret[8],
-                   "OutHumi" : ret[9],
-                   "WindDir" : ret[10],
-                   "WindSp" : ret[11],
-                   "Press" : ret[12],
-                   "Rain" : ret[13],
-                   "CabinTemp1" : ret[14],
-                   "CabinTemp2" :ret[15],
-                   "DomeTemp1" : ret[16],
-                   "DomeTemp2" : ret[17],
-                   "GenTemp1" : ret[18],
-                   "GenTemp2" : ret[19],
-                   "None" : 'None',
-                   "Current_M2" : beam_status[2]
-                   }
-                   
-        return statusbox
-
-
-class read_status(object):
-    
-    def __init__(self):
-        import telescope_nanten.equipment_nanten
-        self.status = telescope_nanten.equipment_nanten.read_status()
-
-    def read_status(self):
-        """機器and天気のステータスを取得_"""
-        timestamp = time.strftime('%Y/%m/%d %H:%M:%S',time.gmtime())
-        ant_status = self.status.read_antenna()
-        beam_status = self.status.read_beam()
-        # sg_status = self.doppler.get_status()
-        ret = self.status.read_weather()
+        tv = time.time()
+        mjd = tv/24./3600. + 40587.0
+        ntime = dt.now()
+        secofday = ntime.hour*60*60 + ntime.minute*60 + ntime.second + ntime.microsecond*0.000001
+        lst_g = 0.67239+1.00273781*(mjd-40000.0)
+        l_plb = -67.7222222222/360.0
+        lst_plb = lst_g + l_plb
+        lst_plb_i = int(lst_plb)
+        lst_plb -= lst_plb_i
+        lst_plb = 24.0*lst_plb
+        lst_hh = int(lst_plb)
+        lst_plb = 60.0*(lst_plb - lst_hh)
+        lst_mm = int(lst_plb)
+        lst_plb = 60.0*(lst_plb -lst_mm)
+        lst_ss = int(lst_plb)
         
         if ant_status[1][0] & ant_status[1][1] == 1:
             drive_ready_az = 'ON'
@@ -455,7 +388,109 @@ class read_status(object):
                    "None" : 'None',
                    "Current_M2" : beam_status[2],
                    "MJD" : mjd,
-                   "LST" : [lst_hh,lst_mm,lst_ss],
+                   "LST" : [lst_hh:lst_mm:lst_ss],
+                   "Secofday" : secofday
+                   }
+                   
+        return statusbox
+
+
+class read_status(object):
+    
+    def __init__(self):
+        import telescope_nanten.equipment_nanten
+        self.status = telescope_nanten.equipment_nanten.read_status()
+
+    def read_status(self):
+        """機器and天気のステータスを取得_"""
+        timestamp = time.strftime('%Y/%m/%d %H:%M:%S',time.gmtime())
+        ant_status = self.status.read_antenna()
+        beam_status = self.status.read_beam()
+        # sg_status = self.doppler.get_status()
+        ret = self.status.read_weather()
+        
+        tv = time.time()
+        mjd = tv/24./3600. + 40587.0
+        ntime = dt.now()
+        secofday = ntime.hour*60*60 + ntime.minute*60 + ntime.second + ntime.microsecond*0.000001
+        lst_g = 0.67239+1.00273781*(mjd-40000.0)
+        l_plb = -67.7222222222/360.0
+        lst_plb = lst_g + l_plb
+        lst_plb_i = int(lst_plb)
+        lst_plb -= lst_plb_i
+        lst_plb = 24.0*lst_plb
+        lst_hh = int(lst_plb)
+        lst_plb = 60.0*(lst_plb - lst_hh)
+        lst_mm = int(lst_plb)
+        lst_plb = 60.0*(lst_plb -lst_mm)
+        lst_ss = int(lst_plb)
+        
+        if ant_status[1][0] & ant_status[1][1] == 1:
+            drive_ready_az = 'ON'
+        else:
+            drive_ready_az = 'OFF'
+
+        if ant_status[1][2] & ant_status[1][3] == 1:
+            drive_ready_el = 'ON'
+        else:
+            drive_ready_el = 'OFF'
+
+        if ant_status[1][24] == 1:
+            emergency = 'ON'
+        else:
+            emergency = 'OFF'
+
+        if ant_status[5][1][1] == 'OPEN' and ant_status[5][1][3] == 'OPEN':
+            door_dome = 'OPEN'
+        elif ant_status[5][1][1] == 'MOVE' or ant_status[5][1][3] == 'MOVE':
+            door_dome = 'MOVE'
+        elif ant_status[5][1][1] == 'CLOSE' and ant_status[5][1][3] == 'CLOSE':
+            door_dome = 'CLOSE'
+        else:
+            door_dome = 'ERROR'
+
+        statusbox = { "Time" : timestamp,
+                   "Limit" : ant_status[0],
+                   "Current_Az" : ant_status[4][0]/3600.,
+                   "Current_El" : ant_status[4][1]/3600.,
+                   "Command_Az" : ant_status[3][2]/3600.,
+                   "Command_El" : ant_status[3][3]/3600.,
+                   "Deviation_Az" : ant_status[3][4],
+                   "Deviation_El" : ant_status[3][5],
+                   "Drive_ready_Az" : drive_ready_az,
+                   "Drive_ready_El": drive_ready_el,
+                   "Authority" : ant_status[2],
+                   "Emergency" : emergency,
+                   "Current_Dome" : ant_status[6]/3600.,
+                   "Door_Dome" : door_dome,
+                   "Door_Membrane" : ant_status[5][2][1],
+                   "Door_Authority" : ant_status[5][3],
+                   "Current_M4" : beam_status[1],
+                   "Current_Hot" : beam_status[0],
+                   "Year" : ret[0],
+                   "Month" : ret[1],
+                   "Day" : ret[2],
+                   "Hour" : ret[3],
+                   "Min" : ret[4],
+                   "Sec" : ret[5],
+                   "InTemp" : ret[6],
+                   "OutTemp" : ret[7],
+                   "InHumi" : ret[8],
+                   "OutHumi" : ret[9],
+                   "WindDir" : ret[10],
+                   "WindSp" : ret[11],
+                   "Press" : ret[12],
+                   "Rain" : ret[13],
+                   "CabinTemp1" : ret[14],
+                   "CabinTemp2" :ret[15],
+                   "DomeTemp1" : ret[16],
+                   "DomeTemp2" : ret[17],
+                   "GenTemp1" : ret[18],
+                   "GenTemp2" : ret[19],
+                   "None" : 'None',
+                   "Current_M2" : beam_status[2],
+                   "MJD" : mjd,
+                   "LST" : [lst_hh:lst_mm:lst_ss],
                    "Secofday" : secofday 
                    }
                    
