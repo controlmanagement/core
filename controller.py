@@ -203,7 +203,11 @@ class controller(object):
         self.tracking_end()
         self.ant.planet_move(number, off_x, off_y, hosei, offcoord, lamda, az_rate, el_rate)
         return
-
+    
+    def read_track(self):
+        ret = self.ant.read_track()
+        return ret
+    
     def tracking_end(self):
         """trackingの終了"""
         self.ant.tracking_end()
