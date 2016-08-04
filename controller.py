@@ -206,7 +206,11 @@ class controller(object):
     
     def read_track(self):
         ret = self.ant.read_track()
-        return ret
+        if ret[0] == "TRUE" and ret[1] == "TRUE":
+            flag = True
+        else:
+            flga = False
+        return flag
     
     def tracking_end(self):
         """trackingの終了"""
