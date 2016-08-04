@@ -330,6 +330,7 @@ class controller(object):
         lst_mm = int(lst_plb)
         lst_plb = 60.0*(lst_plb -lst_mm)
         lst_ss = int(lst_plb)
+        lst = str(lst_hh)+":"+str(lst_plb)+":"+str(lst_ss)
         
         if ant_status[1][0] & ant_status[1][1] == 1:
             drive_ready_az = 'ON'
@@ -396,7 +397,7 @@ class controller(object):
                    "None" : 'None',
                    "Current_M2" : beam_status[2],
                    "MJD" : mjd,
-                   "LST" : [lst_hh:lst_mm:lst_ss],
+                   "LST" : lst,
                    "Secofday" : secofday
                    }
                    
