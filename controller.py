@@ -216,11 +216,6 @@ class controller(object):
         """trackingの終了"""
         self.ant.tracking_end()
         return
-    
-    def read_track(self):
-        """tracking_flagの確認"""
-        ret = self.ant.read_track()
-        return ret
 
     def clear_error(self):
         """errorのclear"""
