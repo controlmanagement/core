@@ -216,6 +216,11 @@ class controller(object):
         """trackingの終了"""
         self.ant.tracking_end()
         return
+    
+    def read_track(self):
+        """tracking_flagの確認"""
+        ret = self.ant.read_track()
+        return ret
 
     def clear_error(self):
         """errorのclear"""
@@ -325,7 +330,10 @@ class controller(object):
         lst_mm = int(lst_plb)
         lst_plb = 60.0*(lst_plb -lst_mm)
         lst_ss = int(lst_plb)
-        lst = str(lst_hh)+":"+str(lst_plb)+":"+str(lst_ss)
+        lst_hh = "{0:02d}".format(lst_hh)
+        lst_mm = "{0:02d}".format(lst_mm)
+        lst_ss = "{0:02d}".format(lst_ss)
+        lst = 100
         
         if ant_status[1][0] & ant_status[1][1] == 1:
             drive_ready_az = 'ON'
@@ -391,13 +399,16 @@ class controller(object):
                    "GenTemp2" : ret[19],
                    "None" : 'None',
                    "Current_M2" : beam_status[2],
-                   "MJD" : mjd,
+                   "MJD" : int(mjd),
                    "LST" : lst,
                    "Secofday" : secofday
                    }
                    
         return statusbox
 
+    def otf_scan(self, sx, sy, dcos, coord_sys, dx, dy, dt, n, rampt, delay, lamda, hosei, code_mode):
+        on_start = self.ant.otf_start(sx, sy, dcos, coord_sys, dx, dy, dt, n, rampt, delay, lamda, hosei, code_mode)
+        return on_start
 
 class read_status(object):
     
@@ -500,3 +511,4 @@ class read_status(object):
                    }
                    
         return statusbox
+
