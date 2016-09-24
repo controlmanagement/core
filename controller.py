@@ -209,7 +209,7 @@ class controller(object):
         if ret[0] == "TRUE" and ret[1] == "TRUE":
             flag = True
         else:
-            flga = False
+            flag = False
         return flag
     
     def tracking_end(self):
