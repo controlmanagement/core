@@ -185,23 +185,23 @@ class controller(object):
         self.ant.azel_stop()
         return
     
-    def radec_move(self, ra, dec, code_mode, off_x = 0, off_y = 0, hosei = 'hosei_230.txt', offcoord = 'HORIZONTAL', lamda=2600, az_rate=12000, el_rate=12000):
+    def radec_move(self, ra, dec, code_mode, off_x = 0, off_y = 0, hosei = 'hosei_230.txt', offcoord = 'HORIZONTAL', lamda=2600, az_rate=12000, el_rate=12000, dcos=1):
         """望遠鏡を(Ra, Dec)に動かす"""
         self.tracking_end()
-        self.ant.radec_move(ra, dec, code_mode, off_x, off_y, hosei, offcoord, lamda, az_rate, el_rate)
+        self.ant.radec_move(ra, dec, code_mode, off_x, off_y, hosei, offcoord, lamda, az_rate, el_rate, dcos)
         return
 
-    def galactic_move(self, l, b, off_x = 0, off_y = 0, hosei = 'hosei_230.txt', offcoord = 'HORIZONTAL', lamda=2600, az_rate=12000, el_rate=12000):
+    def galactic_move(self, l, b, off_x = 0, off_y = 0, hosei = 'hosei_230.txt', offcoord = 'HORIZONTAL', lamda=2600, az_rate=12000, el_rate=12000, dcos=0):
         """望遠鏡を(l, b)に動かす"""
         self.tracking_end()
-        self.ant.galactic_move(l, b, off_x, off_y, hosei, offcoord, lamda, az_rate, el_rate)
+        self.ant.galactic_move(l, b, off_x, off_y, hosei, offcoord, lamda, az_rate, el_rate, dcos)
         return
 
-    def planet_move(self, number, off_x = 0, off_y = 0, hosei = 'hosei_230.txt', offcoord = 'HORIZONTAL', lamda=2600, az_rate=12000, el_rate=12000):
+    def planet_move(self, number, off_x = 0, off_y = 0, hosei = 'hosei_230.txt', offcoord = 'HORIZONTAL', lamda=2600, az_rate=12000, el_rate=12000, dcos=0):
         """望遠鏡をplanetに動かす
         1.Mercury 2.Venus 3. 4.Mars 5.Jupiter 6.Saturn 7.Uranus 8.Neptune, 9.Pluto, 10.Moon, 11.Sun"""
         self.tracking_end()
-        self.ant.planet_move(number, off_x, off_y, hosei, offcoord, lamda, az_rate, el_rate)
+        self.ant.planet_move(number, off_x, off_y, hosei, offcoord, lamda, az_rate, el_rate,dcos)
         return
     
     def read_track(self):
@@ -216,7 +216,7 @@ class controller(object):
         """trackingの終了"""
         self.ant.tracking_end()
         return
-
+    
     def clear_error(self):
         """errorのclear"""
         self.ant.clear_error()
@@ -401,8 +401,8 @@ class controller(object):
                    
         return statusbox
 
-    def otf_scan(self, sx, sy, dcos, coord_sys, dx, dy, dt, n, rampt, delay, lamda, hosei, code_mode):
-        on_start = self.ant.otf_start(sx, sy, dcos, coord_sys, dx, dy, dt, n, rampt, delay, lamda, hosei, code_mode)
+    def otf_scan(self, sx, sy, dcos, coord_sys, dx, dy, dt, n, rampt, delay, lamda, hosei, code_mode, ntarg=0, off_coord = "HORIZONTAL", off_x=0, off_y=0):
+        on_start = self.ant.otf_start(sx, sy, dcos, coord_sys, dx, dy, dt, n, rampt, delay, lamda, hosei, code_mode, ntarg, off_coord, off_x, off_y)
         return on_start
 
 class read_status(object):
