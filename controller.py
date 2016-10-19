@@ -401,8 +401,8 @@ class controller(object):
                    
         return statusbox
 
-    def otf_scan(self, sx, sy, dcos, coord_sys, dx, dy, dt, n, rampt, delay, lamda, hosei, code_mode, ntarg=0, off_coord = "HORIZONTAL", off_x=0, off_y=0):
-        on_start = self.ant.otf_start(sx, sy, dcos, coord_sys, dx, dy, dt, n, rampt, delay, lamda, hosei, code_mode, ntarg, off_coord, off_x, off_y)
+    def otf_scan(self, lambda_on, beta_on, dcos, coord_sys, dx, dy, dt, n, rampt, delay, lamda, hosei, code_mode, off_x, off_y, off_coord, ntarg = 0):
+        on_start = self.ant.otf_start(lambda_on, beta_on, dcos, coord_sys, dx, dy, dt, n, rampt, delay, lamda, hosei, code_mode, off_x, off_y, off_coord, ntarg)
         return on_start
 
 class read_status(object):
@@ -506,4 +506,5 @@ class read_status(object):
                    }
                    
         return statusbox
+
 
