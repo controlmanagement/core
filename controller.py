@@ -4,11 +4,8 @@
 """
 ------------------------------------------------
 [Detail Description]
-
 ------------------------------------------------
 [History]
-
-
 ------------------------------------------------
 """
 import time
@@ -37,6 +34,8 @@ class beam(object):
     def get_status(self):
         pass
 
+#    def m2_move(self, dist):
+#	pass
 
 class antenna(object):
 
@@ -139,10 +138,10 @@ class controller(object):
     
     def initialize_observation(self):
         """
-        観測の初期化を行う。
-        実行項目は、
-        ・アンテナ指向性能の大気屈折補正
-        ・黒体スライダを R に
+        \u89b3\u6e2c\u306e\u521d\u671f\u5316\u3092\u884c\u3046\u3002
+        \u5b9f\u884c\u9805\u76ee\u306f\u3001
+        \u30fb\u30a2\u30f3\u30c6\u30ca\u6307\u5411\u6027\u80fd\u306e\u5927\u6c17\u5c48\u6298\u88dc\u6b63
+        \u30fb\u9ed2\u4f53\u30b9\u30e9\u30a4\u30c0\u3092 R \u306b
         """
         #self.correct_atmosphere()
         self.move_hot("r")
@@ -163,13 +162,13 @@ class controller(object):
         return
 
     def test_move(self,az_speed,el_speed,dist_arcsec = 5 * 3600):
-        """望遠鏡を(Az_speed, El_speed)でdist_arcsecの距離を動かす"""
+        """\u671b\u9060\u93e1\u3092(Az_speed, El_speed)\u3067dist_arcsec\u306e\u8ddd\u96e2\u3092\u52d5\u304b\u3059"""
         self.tracking_end()
         self.ant.test_move(az_speed,el_speed,dist_arcsec)
         return
 
     def azel_move(self, az_arcsec, el_arcsec, az_rate = 12000, el_rate = 12000):
-        """望遠鏡を(Az, El)に動かす"""
+        """\u671b\u9060\u93e1\u3092(Az, El)\u306b\u52d5\u304b\u3059"""
         if az_arcsec < -260.*3600. or az_arcsec > 260*3600:
             print("!!Az range is -260~260[degree]!!")
             return
@@ -181,24 +180,24 @@ class controller(object):
         return
     
     def azel_stop(self):
-        """望遠鏡のazel駆動を止める"""
+        """\u671b\u9060\u93e1\u306eazel\u99c6\u52d5\u3092\u6b62\u3081\u308b"""
         self.ant.azel_stop()
         return
     
     def radec_move(self, ra, dec, code_mode, off_x = 0, off_y = 0, hosei = 'hosei_230.txt', offcoord = 'HORIZONTAL', lamda=2600, az_rate=12000, el_rate=12000, dcos=1):
-        """望遠鏡を(Ra, Dec)に動かす"""
+        """\u671b\u9060\u93e1\u3092(Ra, Dec)\u306b\u52d5\u304b\u3059"""
         self.tracking_end()
         self.ant.radec_move(ra, dec, code_mode, off_x, off_y, hosei, offcoord, lamda, az_rate, el_rate, dcos)
         return
 
     def galactic_move(self, l, b, off_x = 0, off_y = 0, hosei = 'hosei_230.txt', offcoord = 'HORIZONTAL', lamda=2600, az_rate=12000, el_rate=12000, dcos=0):
-        """望遠鏡を(l, b)に動かす"""
+        """\u671b\u9060\u93e1\u3092(l, b)\u306b\u52d5\u304b\u3059"""
         self.tracking_end()
         self.ant.galactic_move(l, b, off_x, off_y, hosei, offcoord, lamda, az_rate, el_rate, dcos)
         return
 
     def planet_move(self, number, off_x = 0, off_y = 0, hosei = 'hosei_230.txt', offcoord = 'HORIZONTAL', lamda=2600, az_rate=12000, el_rate=12000, dcos=0):
-        """望遠鏡をplanetに動かす
+        """\u671b\u9060\u93e1\u3092planet\u306b\u52d5\u304b\u3059
         1.Mercury 2.Venus 3. 4.Mars 5.Jupiter 6.Saturn 7.Uranus 8.Neptune, 9.Pluto, 10.Moon, 11.Sun"""
         self.tracking_end()
         self.ant.planet_move(number, off_x, off_y, hosei, offcoord, lamda, az_rate, el_rate,dcos)
@@ -213,76 +212,80 @@ class controller(object):
         return flag
     
     def tracking_end(self):
-        """trackingの終了"""
+        """tracking\u306e\u7d42\u4e86"""
         self.ant.tracking_end()
         return
     
     def clear_error(self):
-        """errorのclear"""
+        """error\u306eclear"""
         self.ant.clear_error()
         return
 
     def dome_open(self):
-        """Domeのopen"""
+        """Dome\u306eopen"""
         self.ant.dome_open()
         return
 
     def dome_close(self):
-        """Domeのclose"""
+        """Dome\u306eclose"""
         self.ant.dome_close()
         return
 
     def memb_open(self):
-        """メンブレンのopen"""
+        """\u30e1\u30f3\u30d6\u30ec\u30f3\u306eopen"""
         self.ant.memb_open()
         return
 
     def memb_close(self):
-        """メンブレンのopenclose"""
+        """\u30e1\u30f3\u30d6\u30ec\u30f3\u306eopenclose"""
         self.ant.memb_close()
         return
 
     def dome_move(self, dome_az):
-        """Domeを(dome_az)に動作"""
+        """Dome\u3092(dome_az)\u306b\u52d5\u4f5c"""
         self.ant.dome_move(dome_az)
         return
 
     def dome_stop(self):
-        """Domeのclose動作を停止"""
+        """Dome\u306eclose\u52d5\u4f5c\u3092\u505c\u6b62"""
         self.dome_track_end()
         self.ant.dome_stop()
         return
 
     def dome_track(self):
-        """Domeと望遠鏡のsync"""
+        """Dome\u3068\u671b\u9060\u93e1\u306esync"""
         self.ant.dome_track()
         return
 
     def dome_track_end(self):
-        """Domeと望遠鏡のsyncの終了"""
+        """Dome\u3068\u671b\u9060\u93e1\u306esync\u306e\u7d42\u4e86"""
         self.ant.dome_track_end()
         return
 
     # for mirror
     
     def move_m4(self, position):
-        """mirror4を動かす("in"or"out")"""
+        """mirror4\u3092\u52d5\u304b\u3059("in"or"out")"""
         if position == "in": self.beam.m4_in()
         elif position == "out": self.beam.m4_out()
         else : print('set m4position error')
         return
     
     def move_hot(self, position):
-        """hotloadを動かす("in"or"out")"""
+        """hotload\u3092\u52d5\u304b\u3059("in"or"out")"""
         if position == "in": self.beam.hot_in()
         elif position == "out": self.beam.hot_out()
         else : print('set hotposition error')
         return
 
+    def m2_move(self, dist):
+        """m2\u3092\u52d5\u304b\u3059(um)"""
+	self.beam.m2_move(dist)
+        return
     # for receiber
 
     def oneshot(self, repeat=1, exposure=1.0, stime=0.0):
-        #分光計oneshotのcount値を配列で出力
+        #\u5206\u5149\u8a08oneshot\u306ecount\u5024\u3092\u914d\u5217\u3067\u51fa\u529b
         #dfs01 = self.rx.oneshot_dfs01(repeat, exposure ,stime)
         #dfs02 = self.rx.oneshot_dfs02(repeat, exposure ,stime)
         data = self.rx.oneshot_dfs(repeat, exposure, stime)
@@ -292,7 +295,7 @@ class controller(object):
     # for status
 
     def write_text(self, array, txtname):
-        #データをtxtに書き込み
+        #\u30c7\u30fc\u30bf\u3092txt\u306b\u66f8\u304d\u8fbc\u307f
         file_path = '/home/amigos/NECST/data/ps/'
         f=open(file_path+txtname, 'a+')
         for x in array:
@@ -303,7 +306,7 @@ class controller(object):
         return 
 
     def read_status(self):
-        """機器and天気のステータスを取得_"""
+        """\u6a5f\u5668and\u5929\u6c17\u306e\u30b9\u30c6\u30fc\u30bf\u30b9\u3092\u53d6\u5f97_"""
         timestamp = time.strftime('%Y/%m/%d %H:%M:%S',time.gmtime())
         ant_status = self.status.read_antenna()
         beam_status = self.status.read_beam()
@@ -412,7 +415,7 @@ class read_status(object):
         self.status = telescope_nanten.equipment_nanten.read_status()
 
     def read_status(self):
-        """機器and天気のステータスを取得_"""
+        """\u6a5f\u5668and\u5929\u6c17\u306e\u30b9\u30c6\u30fc\u30bf\u30b9\u3092\u53d6\u5f97_"""
         timestamp = time.strftime('%Y/%m/%d %H:%M:%S',time.gmtime())
         ant_status = self.status.read_antenna()
         beam_status = self.status.read_beam()
@@ -506,5 +509,3 @@ class read_status(object):
                    }
                    
         return statusbox
-
-
